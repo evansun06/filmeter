@@ -1,10 +1,10 @@
 package models
 
-//  Defualt Film Type
+// Defualt Film Type
 type Film struct {
-	Name string
-	Director string
-	Reviews []Review
+	Name      string
+	Director  string
+	Reviews   []Review
 	ReleaseYr uint16
 }
 
