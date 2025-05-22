@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"restful-movie-api/database"
+	"restful-movie-api/routes"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
@@ -20,5 +21,8 @@ func main() {
 
 	// Setup the Gin server
 	server := gin.Default()
-	server.Run(": 8080")
+	// Initialize Routes
+	routes.InitRoutes(server)
+
+	server.Run(":8080")
 }
