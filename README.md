@@ -29,7 +29,7 @@ Here're some of the project's best features:
 *   Tools: Postman
 
 
-<h2>🥼 Setup/Build</h2>
+<h2>🥼 Setup</h2>
 
 ```bash
 # Clone Repo
@@ -58,6 +58,9 @@ go run main.go
 * Add input validation
 * Implement unit testing
 * Dockerize App
+
+
+### Thank you for your support and time!
 
 
 ### Thank you for your support and time!
