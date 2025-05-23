@@ -29,13 +29,38 @@ Here're some of the project's best features:
 *   Tools: Postman
 
 
-<h2>🥼 Setup</h2>
+<h2>🥼 Setup/Build</h2>
 
 ```bash
-clone
+# Clone Repo
+git clone https://github.com/evansun06/movie-restful-api.git
+cd movie-restful-api
+
+# Init Go Mod
+go mod tidy
+
+# Make Environmental File (Required)
+# mac/linux
+touch .env
+
+# windows
+type nul > .env
+
+# run server
+go run main.go
+```
+
+<h2>📃Roadmap/Todo</h2>
+
+* Complete the main project
+
+* List all routes on github
+* Add input validation
+* Implement unit testing
+* Dockerize App
 
 
-
+### Thank you for your support and time!
 
 
 
