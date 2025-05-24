@@ -2,32 +2,32 @@ package controllers
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 	"restful-movie-api/database"
+	"restful-movie-api/errors"
 	"restful-movie-api/models"
-	
+
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 // EFFECT: Endpoint that returns all users in indented json
 func GetUsers(c *gin.Context) {
 	// Send Query
 	rows, queryError := database.Db.Query("SELECT * FROM users;")
-	defer rows.Close() // Prevents Data Leakage
 
 	if queryError != nil {
-		log.Println("Error in query: \"users\"")
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database query failed"})
+		errors.InternalServerError(c, "Error in query: \"users\"")
 		return
 	}
+
+	defer rows.Close() // Prevents Data Leakage
 
 	// Convert SQL -> Go
 	convertedSlice, conversionErr := rowsToUsers(rows)
 
 	if conversionErr != nil {
-		log.Println("ConversionError: \"controllers/users.go\"")
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to convert database rows"})
+		errors.InternalServerError(c, "ConversionError: \"controllers/users.go\"")
 	}
 
 	c.IndentedJSON(http.StatusOK, convertedSlice)
@@ -55,7 +55,31 @@ func rowsToUsers(rows *sql.Rows) ([]*models.User, error) {
 	return users, nil
 }
 
-// EFFECT: Upload new User
-func UploadUser(c *gin.Context) {
+// EFFECT: Uploads new User
+//         If duplicate username/email, will handle by returning conflict error
+func HandleUserUpload(c *gin.Context) {
+	newUser := &models.User{}
 
+	err := c.BindJSON(newUser)
+
+	if err != nil {
+		errors.BadRequestError(c, "Bad Request Made")
+		return
+	}
+
+	stmt := "INSERT INTO users (username, email, hashed_password) VALUES ($1, $2, $3)"
+
+	_, insertError := database.Db.Exec(stmt, newUser.Username, newUser.Email, newUser.HashedPassword)
+
+	if insertError != nil {
+		if pqErr, ok := insertError.(*pq.Error); ok && pqErr.Code == "23505" {
+			errors.ConflictError(c, "duplicate username/email")
+			return
+		}
+
+		errors.InternalServerError(c, "Error when inserting new username")
+	}
+
+	c.IndentedJSON(http.StatusCreated, newUser)
 }
+
