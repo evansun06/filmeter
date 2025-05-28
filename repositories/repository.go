@@ -1,10 +1,9 @@
 package repositories
 
 import (
+	"database/sql"
 	"log"
 	"restful-movie-api/models"
-
-	"database/sql"
 
 	"github.com/lib/pq"
 )
