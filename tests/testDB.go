@@ -1,4 +1,4 @@
-package database
+package tests
 
 import (
 	"database/sql"
@@ -12,9 +12,11 @@ import (
 
 var Db *sql.DB
 
-func InitDB() error {
+// EFFECT: Initializes the test database connection on localhost.
+// REQUIRES: Assumes that the .env file is present in the root directory
+func InitTestDB() error {
 	// Connect to DB
-	connStr, connStrErr := getDBConnectionString()
+	connStr, connStrErr := getTestDBConnectionString()
 	if connStrErr != nil {
 		return connStrErr
 	}
@@ -35,7 +37,7 @@ func InitDB() error {
 	return nil
 }
 
-func getDBConnectionString() (string, error) {
+func getTestDBConnectionString() (string, error) {
 	// Load .env file
 	err := godotenv.Load()
 	if err != nil {
@@ -43,12 +45,10 @@ func getDBConnectionString() (string, error) {
 	}
 
 	// Access environment variables
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-	dbPort := os.Getenv("DB_PORT")
-	dbHost := os.Getenv("DB_HOST")
+	testUser := os.Getenv("TEST_DB_USER")
+	testPassword := os.Getenv("TEST_DB_PASSWORD")
+	testName := os.Getenv("TEST_DB_NAME")
 
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		dbHost, dbPort, dbUser, dbPassword, dbName), err
+	return fmt.Sprintf("host=localhost port=5432 user=%s password=%s dbname=%s sslmode=disable",
+		testUser, testPassword, testName), err
 }

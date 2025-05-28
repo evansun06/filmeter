@@ -2,7 +2,6 @@ package routes
 
 import (
 	"restful-movie-api/controllers"
-
 	"github.com/gin-gonic/gin"
 )
 

@@ -2,15 +2,32 @@ package controllers
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 	"restful-movie-api/database"
 	"restful-movie-api/errors"
 	"restful-movie-api/models"
+	"restful-movie-api/services"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 )
 
+type UserController struct {
+	Service *services.Services
+}
+
+func (uc *UserController) GetAllUsers(c *gin.Context) {
+	users, err := uc.Service.GetAllUsers()
+	if err != nil {
+		log.Printf("Could not get Users:%v", err)
+		return
+	}
+
+	c.IndentedJSON(http.StatusOK, users)
+}
+
+// TODO: REFACTOR BY
 // EFFECT: Endpoint that returns all users in indented json
 func GetUsers(c *gin.Context) {
 	// Send Query
@@ -33,6 +50,7 @@ func GetUsers(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, convertedSlice)
 }
 
+// TODO: REFACTOR INTO NEW PACKAGE
 // EFFECT: Converts the queried rows into a a Go Slice
 //   - Returns err if wrong sql.Rows is given.
 //
@@ -55,8 +73,10 @@ func rowsToUsers(rows *sql.Rows) ([]*models.User, error) {
 	return users, nil
 }
 
+// TODO: REFACTOR BY INJECTION & SEPERATE DATABASE LOGIC INTO NEW REPOSITORY PACKAGE
 // EFFECT: Uploads new User
-//         If duplicate username/email, will handle by returning conflict error
+//
+//	If duplicate username/email, will handle by returning conflict error
 func HandleUserUpload(c *gin.Context) {
 	newUser := &models.User{}
 
@@ -82,4 +102,3 @@ func HandleUserUpload(c *gin.Context) {
 
 	c.IndentedJSON(http.StatusCreated, newUser)
 }
-
