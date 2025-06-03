@@ -24,6 +24,7 @@ func (repo *Repository) GetAllUsers() ([]*models.User, error) {
 	defer rows.Close()
 
 	var users []*models.User
+
 	for rows.Next() {
 		user := models.User{}
 		if err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.HashedPassword); err != nil {
@@ -40,6 +41,13 @@ func (repo *Repository) GetAllUsers() ([]*models.User, error) {
 	}
 
 	return users, nil
+}
+
+// TODO: Finish ROW QUERY LOGIC
+// EFFECT: Get User by ID
+func (repo *Repository) GetUserByID(id int64) (*models.User, error) {
+	// Query
+	return nil, nil
 }
 
 // EFFECT: Upload a new user to the associated database.

@@ -14,32 +14,31 @@ var Db *sql.DB
 
 // EFFECT: Initializes the test database connection on localhost.
 // REQUIRES: Assumes that the .env file is present in the root directory
-func InitTestDB() error {
+func InitTestDB() (*sql.DB, error) {
 	// Connect to DB
 	connStr, connStrErr := getTestDBConnectionString()
 	if connStrErr != nil {
-		return connStrErr
+		return nil, connStrErr
 	}
 	log.Println("Connection String Established")
 
 	db, sqlConnErr := sql.Open("postgres", connStr)
 	if sqlConnErr != nil {
-		return sqlConnErr
+		return nil, sqlConnErr
 	}
 
 	// Test the connection
 	if pingErr := db.Ping(); pingErr != nil {
-		return pingErr
+		return nil, pingErr
 	}
 
-	Db = db
 	log.Println("Connected to Postgres")
-	return nil
+	return db, nil
 }
 
 func getTestDBConnectionString() (string, error) {
 	// Load .env file
-	err := godotenv.Load()
+	err := godotenv.Load("../.env")
 	if err != nil {
 		fmt.Println("Error loading .env file")
 	}
