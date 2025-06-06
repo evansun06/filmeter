@@ -42,6 +42,9 @@ func TestMain(m *testing.M) {
 	testRouter.POST("/user", testUC.UploadNewUser)
 
 	code := m.Run() // run all tests
+
+	// Close
+	testDB.Close()
 	os.Exit(code)
 }
 
