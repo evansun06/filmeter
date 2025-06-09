@@ -1,0 +1,83 @@
+definitions:
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: A lightweight API for managing movie social media data
+  title: Filmeter RESTful API
+  version: "0.0"
+paths:
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new user to the database while handling duplicates
+      parameters:
+      - description: User object containing email, id, and username
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User added successfully
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Invalid request payload
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "409":
+          description: User already exists
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to add user
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Upload a single new user
+      tags:
+      - Users
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all users.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of all users
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Failed to retrieve users
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get all users
+      tags:
+      - Users
+swagger: "2.0"

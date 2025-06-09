@@ -7,10 +7,18 @@ import (
 	"restful-movie-api/repositories"
 	"restful-movie-api/services"
 
+	_ "restful-movie-api/docs"
+
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
+	swaggerFiles "github.com/swaggo/files"     // Swagger UI files
+	ginSwagger "github.com/swaggo/gin-swagger" // Gin middleware for Swagger
 )
 
+// @title Filmeter RESTful API
+// @version 0.0
+// @description A lightweight API for managing movie social media data
+// @host localhost:8080
+// @BasePath 
 func main() {
 	// connect to db
 	db, err := database.InitDB()
@@ -32,6 +40,8 @@ func main() {
 	// Initialize Routes
 	server.GET("/users", uc.GetAllUsers)
 	server.POST("/user", uc.UploadNewUser)
+
+	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	server.Run(":8080")
 }
