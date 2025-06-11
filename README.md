@@ -18,15 +18,16 @@ Here're some of the project's best features:
 
 *   📦 CRUD API - Create an account, add film reviews, and update your hottest takes.
 *   ⚡ Fast and lightweight - built with Go&Gin
-*   🏎 RESTful Design
+*   🛠️ Fully documented with Swagger.UI
 *   💾 Postgres Support
+
 
 <h2>🧰 Tech Stack</h2>
 
 *   Language: Go
 *   Framework: Gin
 *   Database: PostgreSQL
-*   Tools: Postman
+*   Tools: Swagger.UI + Postman
 
 
 <h2>🥼 Setup</h2>
