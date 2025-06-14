@@ -59,6 +59,104 @@ paths:
       summary: Upload a single new user
       tags:
       - Users
+  /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a single user by a unique ID parameter
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Successfully removed user
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Invalid ID input (non integer)
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: No user with given ID exists
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to delete user
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Delete user by ID
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a single user by a unique ID parameter
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Single User
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid ID input (non integer)
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: No user found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to retrieve user
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get single user by ID
+      tags:
+      - Users
+  /user/username/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a single user by a username parameter
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Single User
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid username input
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: User with given username does not exist
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Failed to retrieve user
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Get single user by username
+      tags:
+      - Users
   /users:
     get:
       consumes:

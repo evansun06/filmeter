@@ -33,8 +33,8 @@ func TestMain(m *testing.M) {
 	}
 
 	// Initialize Layers
-	testRepo := repositories.Repository{DB: testDB}
-	testSC := services.Services{Repo: &testRepo}
+	testRepo := repositories.UserRepository{DB: testDB}
+	testSC := services.UserServices{Repo: &testRepo}
 	testUC := controllers.UserController{Service: &testSC}
 
 	// Initialize TestRoutes

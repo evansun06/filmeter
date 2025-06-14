@@ -104,7 +104,7 @@ func TestPutSingleUser(t *testing.T) {
 	// Serve
 	testRouter.ServeHTTP(recorder, req)
 
-	if recorder.Code != http.StatusOK {
+	if recorder.Code != http.StatusCreated {
 		t.Fatalf("Expected status OK, instead recieved %d", recorder.Code)
 	}
 
