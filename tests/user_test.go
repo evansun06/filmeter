@@ -3,6 +3,7 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -121,6 +122,51 @@ func TestPutSingleUser(t *testing.T) {
 		t.Fatalf("PUT and GET user data mismatch, %s, %s, %s", verifyUser.Username, verifyUser.Email, verifyUser.HashedPassword)
 	}
 
+	CleanTestDB()
+}
+
+// GET endpoint @ /user/:id
+// Validate Fetch User By ID
+func TestGETUserByID(t *testing.T) {
+	CleanTestDB()
+	// Insert Test Users
+	_, err := testDB.Exec("INSERT INTO users (username, email, hashed_password) VALUES ('John Doe', 'johnp@test.com', '1234')")
+	if err != nil {
+		t.Fatalf("failed to  insert a test user:  %v", err)
+	}
+	
+	var userID int64 = 1
+
+	url := fmt.Sprintf("/user/%d", userID)
+	// Create HTTP request
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+
+	if err != nil {
+		t.Fatalf("failed to create request: %v", err)
+	}
+
+	// Create HTTP recorder
+	recorder := httptest.NewRecorder()
+
+	// Serve
+	testRouter.ServeHTTP(recorder, req)
+
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("expected status code %d, got %d", http.StatusOK, recorder.Code)
+	}
+	
+	var fetchedUser models.User
+
+	err = json.NewDecoder(recorder.Body).Decode(&fetchedUser)
+	if err != nil {
+		t.Fatalf("failed to decode json: %v", err)
+		return
+	}
+
+	// Verify the fetched user data
+    if fetchedUser.ID != userID || fetchedUser.Username != "John Doe" || fetchedUser.Email != "johnp@test.com" {
+        t.Fatalf("Fetched user data mismatch: %+v", fetchedUser)
+    }
 	CleanTestDB()
 
 }

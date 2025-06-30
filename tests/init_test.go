@@ -40,6 +40,7 @@ func TestMain(m *testing.M) {
 	// Initialize TestRoutes
 	testRouter.GET("/users", testUC.GetAllUsers)
 	testRouter.POST("/user", testUC.UploadNewUser)
+	testRouter.GET("/user/:id", testUC.GetUserByID)
 
 	code := m.Run() // run all tests
 
